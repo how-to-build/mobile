@@ -3,16 +3,16 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class RegisterPage extends StatefulWidget {
-  _RegisterPageState createState() => _RegisterPageState();
+class LoginPage extends StatefulWidget {
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
   bool _obscureText = true;
 
-  String _username, _email, _password;
+  String _email, _password;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,6 @@ class _RegisterPageState extends State<RegisterPage> {
               child: Column(
                 children: <Widget>[
                   _showTitle(context),
-                  _showUsernameInput(),
                   _showEmailInput(),
                   _showPasswordInput(),
                   _showFormActions(context),
@@ -62,13 +61,14 @@ class _RegisterPageState extends State<RegisterPage> {
                 Radius.circular(10.0),
               ),
             ),
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).accentColor,
           ),
           FlatButton(
             child: Text(
-              'Existing user? Login',
+              'New user? Register',
             ),
-            onPressed: () => Navigator.pushReplacementNamed(context, '/login'),
+            onPressed: () =>
+                Navigator.pushReplacementNamed(context, '/register'),
           ),
         ],
       ),
@@ -80,17 +80,16 @@ class _RegisterPageState extends State<RegisterPage> {
 
     if (form.validate()) {
       form.save();
-      _registerUser();
-      print('Username: $_username, Email: $_email, Password: $_password');
+      _loginUser();
+      print('Username:  Email: $_email, Password: $_password');
     }
   }
 
-  void _registerUser() async {
+  void _loginUser() async {
     http.Response response = await http.post(
-        'https://frozen-hamlet-77739.herokuapp.com/api/signup',
+        'https://frozen-hamlet-77739.herokuapp.com/api/login',
         headers: {'Content-Type': 'application/json; charset=UTF-8'},
-        body: json.encode(
-            {"username": _username, "email": _email, "password": _password}));
+        body: json.encode({"email": _email, "password": _password}));
 
     final responseData = json.decode(response.body);
     print(responseData);
@@ -98,7 +97,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Text _showTitle(BuildContext context) {
     return Text(
-      'Register',
+      'Login',
       style: Theme.of(context).textTheme.headline,
     );
   }
@@ -141,25 +140,6 @@ class _RegisterPageState extends State<RegisterPage> {
           hintText: 'Enter a valid email',
           icon: Icon(
             Icons.email,
-            color: Colors.grey,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Padding _showUsernameInput() {
-    return Padding(
-      padding: EdgeInsets.only(top: 20.0),
-      child: TextFormField(
-        onSaved: (val) => _username = val,
-        validator: (val) => val.length < 6 ? 'Requires 6 characters' : null,
-        decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          labelText: 'Username',
-          hintText: 'Enter username, min length 6',
-          icon: Icon(
-            Icons.face,
             color: Colors.grey,
           ),
         ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/pages/login_page.dart';
 import 'package:mobile/pages/register_page.dart';
+import 'package:http/http.dart' as http;
 
 void main() => runApp(MyApp());
 
@@ -9,8 +11,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'How-To',
+      routes: {
+        '/login': (BuildContext context) => LoginPage(),
+        '/register': (BuildContext context) => RegisterPage(),
+      },
       theme: ThemeData(
-          brightness: Brightness.dark,
+          // brightness: Brightness.dark,
           primaryColor: Colors.cyan[400],
           accentColor: Colors.deepOrange[200],
           textTheme: TextTheme(
