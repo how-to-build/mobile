@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/pages/howto_page.dart';
 import 'package:mobile/pages/login_page.dart';
 import 'package:mobile/pages/register_page.dart';
 import 'package:http/http.dart' as http;
@@ -12,6 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'How-To',
       routes: {
+        '/how-to': (BuildContext context) => HowtoPage(),
         '/login': (BuildContext context) => LoginPage(),
         '/register': (BuildContext context) => RegisterPage(),
       },

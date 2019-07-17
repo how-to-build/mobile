@@ -9,7 +9,9 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  bool _isSubmitting;
   bool _obscureText = true;
 
   String _username, _email, _password;
@@ -17,6 +19,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Register'),
       ),
@@ -47,23 +50,28 @@ class _RegisterPageState extends State<RegisterPage> {
       padding: EdgeInsets.only(top: 20.0),
       child: Column(
         children: <Widget>[
-          RaisedButton(
-            onPressed: _submit,
-            child: Text(
-              'Submit',
-              style: Theme.of(context).textTheme.body1.copyWith(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
+          _isSubmitting == true
+              ? CircularProgressIndicator(
+                  valueColor:
+                      AlwaysStoppedAnimation(Theme.of(context).primaryColor),
+                )
+              : RaisedButton(
+                  onPressed: _submit,
+                  child: Text(
+                    'Submit',
+                    style: Theme.of(context).textTheme.body1.copyWith(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
-            ),
-            elevation: 8.0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(10.0),
-              ),
-            ),
-            color: Theme.of(context).primaryColor,
-          ),
+                  elevation: 8.0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10.0),
+                    ),
+                  ),
+                  color: Theme.of(context).primaryColor,
+                ),
           FlatButton(
             child: Text(
               'Existing user? Login',
@@ -86,6 +94,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void _registerUser() async {
+    setState(() => _isSubmitting = true);
     http.Response response = await http.post(
         'https://frozen-hamlet-77739.herokuapp.com/api/signup',
         headers: {'Content-Type': 'application/json; charset=UTF-8'},
@@ -93,7 +102,33 @@ class _RegisterPageState extends State<RegisterPage> {
             {"username": _username, "email": _email, "password": _password}));
 
     final responseData = json.decode(response.body);
+
+    setState(() => _isSubmitting = false);
+
+    _showSuccessSnack();
+    _redirectUser();
+
     print(responseData);
+  }
+
+  void _redirectUser() {
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.pushReplacementNamed(context, '/how-to');
+    });
+  }
+
+  void _showSuccessSnack() {
+    final snackbar = SnackBar(
+      content: Center(
+        child: Text(
+          'User $_username successfully created!',
+          style: TextStyle(color: Colors.green),
+        ),
+      ),
+    );
+
+    _scaffoldKey.currentState.showSnackBar(snackbar);
+    _formKey.currentState.reset();
   }
 
   Text _showTitle(BuildContext context) {
