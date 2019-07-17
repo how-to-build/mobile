@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mobile/pages/howto_page.dart';
 import 'package:mobile/pages/login_page.dart';
 import 'package:mobile/pages/register_page.dart';
-import 'package:http/http.dart' as http;
 
 void main() => runApp(MyApp());
 
@@ -34,7 +33,7 @@ class MyApp extends StatelessWidget {
               fontSize: 18.0,
             ),
           )),
-      home: RegisterPage(),
+      home: HowtoPage(),
     );
   }
 }
