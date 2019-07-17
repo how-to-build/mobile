@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
@@ -11,7 +12,7 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  bool _obscureText = true;
+  bool _isSubmitting, _obscureText = true;
 
   String _email, _password;
 
@@ -76,6 +77,9 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+//====================================================================
+
+//====================================================================
 
   void _submit() {
     final form = _formKey.currentState;
@@ -83,18 +87,70 @@ class _LoginPageState extends State<LoginPage> {
     if (form.validate()) {
       form.save();
       _loginUser();
-      print('Username:  Email: $_email, Password: $_password');
     }
   }
 
   void _loginUser() async {
+    setState(() => _isSubmitting = true);
+
     http.Response response = await http.post(
         'https://frozen-hamlet-77739.herokuapp.com/api/login',
         headers: {'Content-Type': 'application/json; charset=UTF-8'},
         body: json.encode({"email": _email, "password": _password}));
-
     final responseData = json.decode(response.body);
+    _storeUserData(responseData);
     print(responseData);
+
+    if (response.statusCode == 200) {
+      setState(() => _isSubmitting = false);
+      _storeUserData(responseData);
+      _showSuccessSnack();
+      _redirectUser();
+
+      print(responseData);
+    } else {
+      setState(() => _isSubmitting = false);
+      final String errorMsg = responseData['message'];
+      _showErrorSnack(errorMsg);
+    }
+  }
+
+  void _storeUserData(responseData) async {
+    final prefs = await SharedPreferences.getInstance();
+    String token = responseData['token'];
+    json.encode(token);
+    prefs.setString('token', json.encode(token));
+  }
+
+  void _redirectUser() {
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.pushReplacementNamed(context, '/how-to');
+    });
+  }
+
+  void _showSuccessSnack() {
+    final snackbar = SnackBar(
+      content: Text(
+        'Loggin Successful.',
+        style: TextStyle(color: Colors.green),
+      ),
+    );
+
+    _scaffoldKey.currentState.showSnackBar(snackbar);
+    _formKey.currentState.reset();
+  }
+
+  void _showErrorSnack(String errorMsg) {
+    final snackbar = SnackBar(
+      content: Text(
+        errorMsg,
+        style: TextStyle(color: Colors.red),
+      ),
+    );
+
+    _scaffoldKey.currentState.showSnackBar(snackbar);
+
+    throw Exception('Login Failure: $errorMsg');
   }
 
   Text _showTitle(BuildContext context) {

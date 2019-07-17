@@ -100,15 +100,19 @@ class _RegisterPageState extends State<RegisterPage> {
         headers: {'Content-Type': 'application/json; charset=UTF-8'},
         body: json.encode(
             {"username": _username, "email": _email, "password": _password}));
-
     final responseData = json.decode(response.body);
+    if (response.statusCode == 200) {
+      setState(() => _isSubmitting = false);
 
-    setState(() => _isSubmitting = false);
+      _showSuccessSnack();
+      _redirectUser();
 
-    _showSuccessSnack();
-    _redirectUser();
-
-    print(responseData);
+      print(responseData);
+    } else {
+      setState(() => _isSubmitting = false);
+      final String errorMsg = responseData['message'];
+      _showErrorSnack(errorMsg);
+    }
   }
 
   void _redirectUser() {
@@ -119,16 +123,27 @@ class _RegisterPageState extends State<RegisterPage> {
 
   void _showSuccessSnack() {
     final snackbar = SnackBar(
-      content: Center(
-        child: Text(
-          'User $_username successfully created!',
-          style: TextStyle(color: Colors.green),
-        ),
+      content: Text(
+        'User $_username successfully created!',
+        style: TextStyle(color: Colors.green),
       ),
     );
 
     _scaffoldKey.currentState.showSnackBar(snackbar);
     _formKey.currentState.reset();
+  }
+
+  void _showErrorSnack(String errorMsg) {
+    final snackbar = SnackBar(
+      content: Text(
+        errorMsg,
+        style: TextStyle(color: Colors.red),
+      ),
+    );
+
+    _scaffoldKey.currentState.showSnackBar(snackbar);
+
+    throw Exception('Error registering: $errorMsg');
   }
 
   Text _showTitle(BuildContext context) {
