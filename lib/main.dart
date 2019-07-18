@@ -4,6 +4,7 @@ import 'package:mobile/models/app_state.dart';
 import 'package:mobile/pages/howto_page.dart';
 import 'package:mobile/pages/login_page.dart';
 import 'package:mobile/pages/register_page.dart';
+import 'package:mobile/redux/actions.dart';
 import 'package:mobile/redux/reducers.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
@@ -26,7 +27,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'How-To',
         routes: {
-          '/how-to': (BuildContext context) => HowtoPage(),
+          '/how-to': (BuildContext context) => HowtoPage(onInit: () {
+                StoreProvider.of<AppState>(context).dispatch(getTokenAction);
+              }),
           '/login': (BuildContext context) => LoginPage(),
           '/register': (BuildContext context) => RegisterPage(),
         },

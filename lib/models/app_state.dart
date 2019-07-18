@@ -2,11 +2,11 @@ import 'package:meta/meta.dart';
 
 @immutable
 class AppState {
-  final dynamic user;
+  final dynamic token;
 
-  AppState({@required this.user});
+  AppState({@required this.token});
 
   factory AppState.initial() {
-    return AppState(user: null);
+    return AppState(token: null);
   }
 }

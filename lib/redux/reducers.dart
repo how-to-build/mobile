@@ -1,9 +1,14 @@
 import 'package:mobile/models/app_state.dart';
+import 'package:mobile/redux/actions.dart';
 
 AppState appReducer(state, action) {
-  return AppState(user: userReducer(state.user, action));
+  return AppState(token: tokenReducer(state.token, action));
 }
 
-userReducer(user, action) {
-  return user;
+tokenReducer(token, action) {
+  if (action is GetTokenAction) {
+    //return token from action
+    return action.token;
+  }
+  return token;
 }
