@@ -6,6 +6,7 @@ class AppState {
 
   AppState({@required this.token});
 
+//below will set the default value
   factory AppState.initial() {
     return AppState(token: null);
   }

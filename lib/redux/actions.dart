@@ -5,7 +5,7 @@ import 'package:redux/redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-//Tokenr action
+//Token actions
 ThunkAction<AppState> getTokenAction = (Store<AppState> store) async {
   final prefs = await SharedPreferences.getInstance();
   final String storedToken = prefs.getString('token');
