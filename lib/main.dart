@@ -9,6 +9,8 @@ import 'package:mobile/redux/reducers.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 
+import 'pages/create_howto_page.dart';
+
 void main() {
   final store = Store<AppState>(appReducer,
       initialState: AppState.initial(), middleware: [thunkMiddleware]);
@@ -27,6 +29,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'How-To',
         routes: {
+          '/create': (BuildContext context) => CreateHowToPage(),
           '/how-to': (BuildContext context) => HowtoPage(onInit: () {
                 StoreProvider.of<AppState>(context).dispatch(getTokenAction);
                 StoreProvider.of<AppState>(context).dispatch(getHowtosAction);
@@ -56,7 +59,8 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: RegisterPage(),
+        // home: RegisterPage(),
+        home: CreateHowToPage(),
       ),
     );
   }
