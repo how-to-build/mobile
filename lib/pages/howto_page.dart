@@ -117,7 +117,7 @@ class HowtoPageState extends State<HowtoPage> {
                   },
                 ),
                 ListTile(
-                  leading: Icon(Icons.add),
+                  leading: Icon(Icons.add_circle_outline),
                   title: Text('Create How-To'),
                   onTap: () {
                     // Update the state of the app.
