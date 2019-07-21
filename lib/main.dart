@@ -39,22 +39,23 @@ class MyApp extends StatelessWidget {
           // )
         },
         theme: ThemeData(
-            brightness: Brightness.dark,
-            primaryColor: Colors.cyan[400],
-            accentColor: Colors.deepOrange[200],
-            textTheme: TextTheme(
-              headline: TextStyle(
-                fontSize: 72.0,
-                fontWeight: FontWeight.bold,
-              ),
-              title: TextStyle(
-                fontSize: 36.0,
-                fontStyle: FontStyle.italic,
-              ),
-              body1: TextStyle(
-                fontSize: 18.0,
-              ),
-            )),
+          // brightness: Brightness.dark,
+          primaryColor: Colors.indigo[700],
+          accentColor: Colors.orange[600],
+          textTheme: TextTheme(
+            headline: TextStyle(
+              fontSize: 72.0,
+              fontWeight: FontWeight.bold,
+            ),
+            title: TextStyle(
+              fontSize: 36.0,
+              fontStyle: FontStyle.italic,
+            ),
+            body1: TextStyle(
+              fontSize: 18.0,
+            ),
+          ),
+        ),
         home: RegisterPage(),
       ),
     );
