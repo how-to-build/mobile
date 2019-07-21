@@ -183,7 +183,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return Padding(
       padding: EdgeInsets.only(top: 20.0),
       child: TextFormField(
-        onSaved: (val) => _email = val,
+        onSaved: (val) => _email = val.replaceAll(new RegExp(r"\s+\b|\b\s"), "").trim().toLowerCase(),
         validator: (val) => !val.contains('@') ? "Not a valid email" : null,
         decoration: InputDecoration(
           border: OutlineInputBorder(),

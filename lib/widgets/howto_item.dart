@@ -20,7 +20,11 @@ class HowToItem extends StatelessWidget {
         leading: Padding(
           padding: const EdgeInsets.all(15.0),
           child: '${item['avatar']}' == 'default'
-              ? Icon(Icons.account_circle)
+              ? Icon(
+                  Icons.account_circle,
+                  color: Theme.of(context).accentColor,
+                  size: 30.0,
+                )
               : Image(
                   image: NetworkImage('${item['avatar']}'),
                 ),
@@ -29,7 +33,9 @@ class HowToItem extends StatelessWidget {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Icon(Icons.thumb_up),
+              child: Icon(
+                Icons.thumb_up,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),

@@ -56,7 +56,7 @@ class HowtoPageState extends State<HowtoPage> {
                 children: <Widget>[
                   IconButton(
                     icon: Icon(Icons.exit_to_app),
-                    onPressed: () => print('Clicked'),
+                    onPressed: () => print('Log Out'),
                   ),
                 ],
               ),
@@ -125,7 +125,7 @@ class HowtoPageState extends State<HowtoPage> {
                   },
                 ),
                 ListTile(
-                  leading: Icon(Icons.account_box),
+                  leading: Icon(Icons.exit_to_app),
                   title: Text('Sign Out'),
                   onTap: () {
                     // Update the state of the app.
