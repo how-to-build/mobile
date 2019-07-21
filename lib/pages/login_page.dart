@@ -118,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
   void _storeUserData(responseData) async {
     final prefs = await SharedPreferences.getInstance();
     String token = responseData['token'];
-    json.encode(token);
+    // json.encode(token);
     prefs.setString('token', json.encode(token));
   }
 

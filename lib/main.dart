@@ -29,12 +29,16 @@ class MyApp extends StatelessWidget {
         routes: {
           '/how-to': (BuildContext context) => HowtoPage(onInit: () {
                 StoreProvider.of<AppState>(context).dispatch(getTokenAction);
+                StoreProvider.of<AppState>(context).dispatch(getHowtosAction);
               }),
           '/login': (BuildContext context) => LoginPage(),
           '/register': (BuildContext context) => RegisterPage(),
+          // '/profile' :  (BuildContext context) => RegisterPage(
+          //   StoreProvider.of<AppState>(context).dispatch(getUserAction);
+          // )
         },
         theme: ThemeData(
-            // brightness: Brightness.dark,
+            brightness: Brightness.dark,
             primaryColor: Colors.cyan[400],
             accentColor: Colors.deepOrange[200],
             textTheme: TextTheme(
