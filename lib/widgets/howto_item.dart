@@ -19,11 +19,11 @@ class HowToItem extends StatelessWidget {
         ),
         leading: Padding(
           padding: const EdgeInsets.all(15.0),
-          child: Image(
-            image: NetworkImage('${item['avatar']}' != 'default'
-                ? '${item['avatar']}'
-                : 'http://cdn.onlinewebfonts.com/svg/img_304664.png'),
-          ),
+          child: '${item['avatar']}' == 'default'
+              ? Icon(Icons.account_circle)
+              : Image(
+                  image: NetworkImage('${item['avatar']}'),
+                ),
         ),
         trailing: Row(
           children: <Widget>[
