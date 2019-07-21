@@ -70,7 +70,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       Radius.circular(10.0),
                     ),
                   ),
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).accentColor,
                 ),
           FlatButton(
             child: Text(
@@ -116,7 +116,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void _redirectUser() {
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(Duration(seconds: 1), () {
       Navigator.pushReplacementNamed(context, '/how-to');
     });
   }
@@ -161,6 +161,10 @@ class _RegisterPageState extends State<RegisterPage> {
         obscureText: _obscureText,
         validator: (val) => val.length < 6 ? 'Requires 6 characters' : null,
         decoration: InputDecoration(
+          prefixIcon: Icon(
+            Icons.lock,
+            color: Colors.grey,
+          ),
           suffixIcon: GestureDetector(
             onTap: () {
               setState(() => _obscureText = !_obscureText);
@@ -170,10 +174,6 @@ class _RegisterPageState extends State<RegisterPage> {
           border: OutlineInputBorder(),
           labelText: 'Password',
           hintText: 'Enter password, min length 6',
-          icon: Icon(
-            Icons.lock,
-            color: Colors.grey,
-          ),
         ),
       ),
     );
@@ -183,16 +183,17 @@ class _RegisterPageState extends State<RegisterPage> {
     return Padding(
       padding: EdgeInsets.only(top: 20.0),
       child: TextFormField(
-        onSaved: (val) => _email = val.replaceAll(new RegExp(r"\s+\b|\b\s"), "").trim().toLowerCase(),
+        onSaved: (val) => _email =
+            val.replaceAll(new RegExp(r"\s+\b|\b\s"), "").trim().toLowerCase(),
         validator: (val) => !val.contains('@') ? "Not a valid email" : null,
         decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          labelText: 'Email',
-          hintText: 'Enter a valid email',
-          icon: Icon(
+          prefixIcon: Icon(
             Icons.email,
             color: Colors.grey,
           ),
+          border: OutlineInputBorder(),
+          labelText: 'Email',
+          hintText: 'Enter a valid email',
         ),
       ),
     );
@@ -205,13 +206,13 @@ class _RegisterPageState extends State<RegisterPage> {
         onSaved: (val) => _username = val,
         validator: (val) => val.length < 6 ? 'Requires 6 characters' : null,
         decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          labelText: 'Username',
-          hintText: 'Enter username, min length 6',
-          icon: Icon(
+          prefixIcon: Icon(
             Icons.face,
             color: Colors.grey,
           ),
+          border: OutlineInputBorder(),
+          labelText: 'Username',
+          hintText: 'Enter username, min length 6',
         ),
       ),
     );

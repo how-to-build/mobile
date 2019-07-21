@@ -48,7 +48,6 @@ class HowtoPageState extends State<HowtoPage> {
           title: SizedBox(
             child: Text('How Tos'),
           ),
-          // leading: Icon(Icons.menu),
           actions: <Widget>[
             Padding(
               padding: EdgeInsets.only(right: 12.0),
@@ -56,7 +55,7 @@ class HowtoPageState extends State<HowtoPage> {
                 children: <Widget>[
                   IconButton(
                     icon: Icon(Icons.exit_to_app),
-                    onPressed: () => print('Log Out'),
+                    onPressed: () => Navigator.pushReplacementNamed(context, '/login'),
                   ),
                 ],
               ),
@@ -130,6 +129,7 @@ class HowtoPageState extends State<HowtoPage> {
                   onTap: () {
                     // Update the state of the app.
                     // ...
+                    Navigator.pushReplacementNamed(context, '/login');
                   },
                 ),
               ],
