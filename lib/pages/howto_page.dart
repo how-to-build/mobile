@@ -72,7 +72,7 @@ class HowtoPageState extends State<HowtoPage> {
     return Scaffold(
       appBar: _appBar,
       body: Container(
-        decoration: gradientBackground,
+        // decoration: gradientBackground,
         child: StoreConnector<AppState, AppState>(
           converter: (store) => store.state,
           builder: (_, state) {
@@ -109,6 +109,7 @@ class HowtoPageState extends State<HowtoPage> {
                   ),
                 ),
                 ListTile(
+                  leading: Icon(Icons.face),
                   title: Text('Profile'),
                   onTap: () {
                     // Update the state of the app.
@@ -116,6 +117,7 @@ class HowtoPageState extends State<HowtoPage> {
                   },
                 ),
                 ListTile(
+                  leading: Icon(Icons.add),
                   title: Text('Create How-To'),
                   onTap: () {
                     // Update the state of the app.
@@ -123,6 +125,7 @@ class HowtoPageState extends State<HowtoPage> {
                   },
                 ),
                 ListTile(
+                  leading: Icon(Icons.account_box),
                   title: Text('Sign Out'),
                   onTap: () {
                     // Update the state of the app.
