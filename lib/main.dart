@@ -59,8 +59,8 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        // home: RegisterPage(),
-        home: CreateHowToPage(),
+        home: RegisterPage(),
+        // home: CreateHowToPage(),
       ),
     );
   }
