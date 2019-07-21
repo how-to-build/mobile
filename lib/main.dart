@@ -33,9 +33,12 @@ class MyApp extends StatelessWidget {
               }),
           '/login': (BuildContext context) => LoginPage(),
           '/register': (BuildContext context) => RegisterPage(),
+          // '/profile' :  (BuildContext context) => RegisterPage(
+          //   StoreProvider.of<AppState>(context).dispatch(getUserAction);
+          // )
         },
         theme: ThemeData(
-            // brightness: Brightness.dark,
+            brightness: Brightness.dark,
             primaryColor: Colors.cyan[400],
             accentColor: Colors.deepOrange[200],
             textTheme: TextTheme(

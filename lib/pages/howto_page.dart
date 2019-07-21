@@ -48,13 +48,17 @@ class HowtoPageState extends State<HowtoPage> {
           title: SizedBox(
             child: Text('How Tos'),
           ),
-          leading: Icon(Icons.book),
+          // leading: Icon(Icons.menu),
           actions: <Widget>[
             Padding(
               padding: EdgeInsets.only(right: 12.0),
-              child: IconButton(
-                icon: Icon(Icons.exit_to_app),
-                onPressed: () => print('Clicked'),
+              child: Row(
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.exit_to_app),
+                    onPressed: () => print('Clicked'),
+                  ),
+                ],
               ),
             )
           ],
@@ -90,6 +94,37 @@ class HowtoPageState extends State<HowtoPage> {
               ],
             );
           },
+        ),
+      ),
+      drawer: Drawer(
+        // Add a ListView to the drawer. This ensures the user can scroll
+        // through the options in the drawer if there isn't enough vertical
+        // space to fit everything.
+        child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              child: Text('Drawer Header'),
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+            ),
+            ListTile(
+              title: Text('Item 1'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+              },
+            ),
+            ListTile(
+              title: Text('Item 2'),
+              onTap: () {
+                // Update the state of the app.
+                // ...
+              },
+            ),
+          ],
         ),
       ),
     );

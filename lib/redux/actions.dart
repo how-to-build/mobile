@@ -39,3 +39,21 @@ class GetHowtosAction {
 
   GetHowtosAction(this._howtos);
 }
+
+// how to actions
+ThunkAction<AppState> getUserAction = (Store<AppState> store) async {
+  http.Response response =
+      await http.get("https://frozen-hamlet-77739.herokuapp.com/api/users/");
+  final Map<String, dynamic> responseData = json.decode(response.body);
+  final List<dynamic> howToList = responseData['allHowTos'];
+  // final List<dynamic> responseData = json.decode(response.body);
+  store.dispatch(GetHowtosAction(howToList));
+};
+
+class GetUserAction {
+  final Map<String, dynamic> _user;
+
+  Map<String, dynamic> get user => this._user;
+
+  GetUserAction(this._user);
+}
