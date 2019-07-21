@@ -1,12 +1,14 @@
 import 'package:mobile/models/app_state.dart';
+import 'package:mobile/models/userObject.dart';
 import 'package:mobile/redux/actions.dart';
 
 AppState appReducer(state, action) {
   return AppState(
-      token: tokenReducer(state.token, action),
-      howtos: howtosReducer(state.howtos, action),
-      username: usernameReducer(state.username, action),
-      );
+    token: tokenReducer(state.token, action),
+    howtos: howtosReducer(state.howtos, action),
+    username: usernameReducer(state.username, action),
+    userObject: userObjectReducer(state.userObject, action),
+  );
 }
 
 tokenReducer(token, action) {
@@ -31,4 +33,12 @@ usernameReducer(username, action) {
   }
 
   return username;
+}
+
+userObjectReducer(UserObject userObject, action) {
+  if (action is GetUserObjectAction) {
+    return action.userObject;
+  }
+
+  return userObject;
 }

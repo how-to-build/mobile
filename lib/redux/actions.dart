@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:mobile/models/app_state.dart';
+import 'package:mobile/models/userObject.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -71,4 +72,22 @@ class GetUserAction {
   Map<String, dynamic> get user => this._user;
 
   GetUserAction(this._user);
+}
+
+// User action
+ThunkAction<AppState> getUserObjectAction = (Store<AppState> store) async {
+  http.Response response = await http.get(
+      'https://frozen-hamlet-77739.herokuapp.com/api/users/${store.state.username}');
+  final Map<String, dynamic> responseData = json.decode(response.body);
+  final UserObject userObject = UserObject.fromJson(responseData['user']);
+  // final List<dynamic> responseData = json.decode(response.body);
+  store.dispatch(GetUserObjectAction(userObject));
+};
+
+class GetUserObjectAction {
+  final UserObject _userObject;
+
+  UserObject get userObject => this._userObject;
+
+  GetUserObjectAction(this._userObject);
 }
