@@ -1,266 +1,200 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:http/http.dart' as http;
+import 'package:mobile/models/app_state.dart';
 
 class CreateHowToPage extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return new CreateHowToPageScreenMode();
-  }
+  _CreateHowToPageState createState() => _CreateHowToPageState();
 }
 
-class MyData {
-  String title = '';
-  String description = '';
-}
+class _CreateHowToPageState extends State<CreateHowToPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-class CreateHowToPageScreenMode extends State<CreateHowToPage> {
+  bool _isSubmitting;
+
+  String _title, _description;
+
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-        theme: new ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: new Scaffold(
-          appBar: new AppBar(
-            title: new Text('Create How-to'),
-          ),
-          body: new StepperBody(),
-        ));
+    return StoreConnector<AppState, AppState>(
+        converter: (store) => store.state,
+        builder: (context, state) {
+          return Scaffold(
+            key: _scaffoldKey,
+            appBar: AppBar(
+              title: Text('Create How To'),
+            ),
+            body: Container(
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Center(
+                child: SingleChildScrollView(
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: <Widget>[
+                        _showTitle(context),
+                        _showHowToTitleInput(),
+                        _showHowToDescriptionInput(),
+                        _showFormActions(context),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        });
   }
-}
 
-class StepperBody extends StatefulWidget {
-  @override
-  _StepperBodyState createState() => new _StepperBodyState();
-}
+  Padding _showFormActions(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: 20.0),
+      child: Column(
+        children: <Widget>[
+          _isSubmitting == true
+              ? CircularProgressIndicator(
+                  valueColor:
+                      AlwaysStoppedAnimation(Theme.of(context).primaryColor),
+                )
+              : RaisedButton(
+                  onPressed: _submit,
+                  child: Text(
+                    'Add How To',
+                    style: Theme.of(context).textTheme.body1.copyWith(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  elevation: 8.0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10.0),
+                    ),
+                  ),
+                  color: Theme.of(context).accentColor,
+                ),
+        ],
+      ),
+    );
+  }
 
-class _StepperBodyState extends State<StepperBody> {
-  int currStep = 0;
-  static var _focusNode = new FocusNode();
-  GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-  static MyData data = new MyData();
+  void _submit() {
+    final form = _formKey.currentState;
 
-  @override
-  void initState() {
-    super.initState();
-    _focusNode.addListener(() {
-      setState(() {});
-      print('Has focus: $_focusNode.hasFocus');
+    if (form.validate()) {
+      form.save();
+      _createHowTo();
+      print('Title: $_title, Description: $_description');
+    }
+  }
+
+  void _createHowTo() async {
+    print('******************');
+    setState(() => _isSubmitting = true);
+
+    http.Response response = await http.post(
+        'https://frozen-hamlet-77739.herokuapp.com/api/howTos',
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'token':
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWJqZWN0Ijo2NiwidXNlcm5hbWUiOiJqaW1ib2IiLCJpYXQiOjE1NjM3NDQwNDIsImV4cCI6MTU2Mzc4MDA0Mn0._RmxftCjfpSFM4cbdnd1qzJOcKVTm7x703OZ7o32NvE"
+        },
+        body: json.encode(
+            {"title": _title, "description": _description, "user_id": 67}));
+    final responseData = json.decode(response.body);
+    print('status code ${response.statusCode}');
+    if (response.statusCode == 200) {
+      setState(() => _isSubmitting = false);
+
+      _showSuccessSnack();
+      _redirectUser();
+
+      print(responseData);
+    } else {
+      setState(() => _isSubmitting = false);
+      final String errorMsg = responseData['message'];
+      _showErrorSnack(errorMsg);
+    }
+  }
+
+// TODO: refactor to push to steps page
+  void _redirectUser() {
+    Future.delayed(Duration(seconds: 1), () {
+      Navigator.pushReplacementNamed(context, '/how-to');
     });
   }
 
-  @override
-  void dispose() {
-    _focusNode.dispose();
-    super.dispose();
+  void _showSuccessSnack() {
+    final snackbar = SnackBar(
+      content: Text(
+        'How To successfully created!',
+        style: TextStyle(color: Colors.green),
+      ),
+    );
+
+    _scaffoldKey.currentState.showSnackBar(snackbar);
+    _formKey.currentState.reset();
   }
 
-  List<Step> steps = [
-    new Step(
-        title: const Text('Title'),
-        //subtitle: const Text('Enter your name'),
-        isActive: true,
-        //state: StepState.error,
-        state: StepState.indexed,
-        content: new TextFormField(
-          focusNode: _focusNode,
-          keyboardType: TextInputType.text,
-          autocorrect: false,
-          onSaved: (String value) {
-            data.title = value;
-          },
-          maxLines: 1,
-          //initialValue: 'Aseem Wangoo',
-          validator: (value) {
-            if (value.isEmpty || value.length < 1) {
-              return 'Please enter title of how-to';
-            }
-          },
-          decoration: new InputDecoration(
-            labelText: 'Enter your title',
-            hintText: 'Enter a title',
-            //filled: true,
-            icon: const Icon(Icons.add_circle_outline),
-            labelStyle:
-                new TextStyle(decorationStyle: TextDecorationStyle.solid),
+  void _showErrorSnack(String errorMsg) {
+    final snackbar = SnackBar(
+      content: Text(
+        errorMsg,
+        style: TextStyle(color: Colors.red),
+      ),
+    );
+
+    _scaffoldKey.currentState.showSnackBar(snackbar);
+
+    throw Exception('Error adding How To');
+  }
+
+  Text _showTitle(BuildContext context) {
+    return Text(
+      'Create How To',
+      style: Theme.of(context).textTheme.headline,
+    );
+  }
+
+  Padding _showHowToTitleInput() {
+    return Padding(
+      padding: EdgeInsets.only(top: 20.0),
+      child: TextFormField(
+        onSaved: (val) => _title = val,
+        validator: (val) => val.length < 3 ? 'Requires 3 characters' : null,
+        decoration: InputDecoration(
+          prefixIcon: Icon(
+            Icons.face,
+            color: Colors.grey,
           ),
-        )),
-    new Step(
-        title: const Text('Description'),
-        //subtitle: const Text('Subtitle'),
-        isActive: true,
-        //state: StepState.editing,
-        state: StepState.indexed,
-        content: new TextFormField(
-          keyboardType: TextInputType.text,
-          autocorrect: false,
-          validator: (value) {
-            if (value.isEmpty || value.length < 10) {
-              return 'Please enter description';
-            }
-          },
-          onSaved: (String value) {
-            data.description = value;
-          },
-          maxLines: 1,
-          decoration: new InputDecoration(
-              labelText: 'Enter your description',
-              hintText: 'Enter a description',
-              icon: const Icon(Icons.phone),
-              labelStyle:
-                  new TextStyle(decorationStyle: TextDecorationStyle.solid)),
-        )),
-    // new Step(
-    //     title: const Text('Email'),
-    //     // subtitle: const Text('Subtitle'),
-    //     isActive: true,
-    //     state: StepState.indexed,
-    //     // state: StepState.disabled,
-    //     content: new TextFormField(
-    //       keyboardType: TextInputType.emailAddress,
-    //       autocorrect: false,
-    //       validator: (value) {
-    //         if (value.isEmpty || !value.contains('@')) {
-    //           return 'Please enter valid email';
-    //         }
-    //       },
-    //       onSaved: (String value) {
-    //         data.email = value;
-    //       },
-    //       maxLines: 1,
-    //       decoration: new InputDecoration(
-    //           labelText: 'Enter your email',
-    //           hintText: 'Enter a email address',
-    //           icon: const Icon(Icons.email),
-    //           labelStyle:
-    //               new TextStyle(decorationStyle: TextDecorationStyle.solid)),
-    //     )),
-    // new Step(
-    //     title: const Text('Age'),
-    //     // subtitle: const Text('Subtitle'),
-    //     isActive: true,
-    //     state: StepState.indexed,
-    //     content: new TextFormField(
-    //       keyboardType: TextInputType.number,
-    //       autocorrect: false,
-    //       validator: (value) {
-    //         if (value.isEmpty || value.length > 2) {
-    //           return 'Please enter valid age';
-    //         }
-    //       },
-    //       maxLines: 1,
-    //       onSaved: (String value) {
-    //         data.age = value;
-    //       },
-    //       decoration: new InputDecoration(
-    //           labelText: 'Enter your age',
-    //           hintText: 'Enter age',
-    //           icon: const Icon(Icons.explicit),
-    //           labelStyle:
-    //               new TextStyle(decorationStyle: TextDecorationStyle.solid)),
-    //     )),
-    // new Step(
-    //     title: const Text('Fifth Step'),
-    //     subtitle: const Text('Subtitle'),
-    //     isActive: true,
-    //     state: StepState.complete,
-    //     content: const Text('Enjoy Step Fifth'))
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    void showSnackBarMessage(String message,
-        [MaterialColor color = Colors.red]) {
-      Scaffold.of(context)
-          .showSnackBar(new SnackBar(content: new Text(message)));
-    }
-
-    void _submitDetails() {
-      final FormState formState = _formKey.currentState;
-
-      if (!formState.validate()) {
-        showSnackBarMessage('Please enter correct data');
-      } else {
-        formState.save();
-        print("Title: ${data.title}");
-        print("Description: ${data.description}");
-
-        showDialog(
-            context: context,
-            child: new AlertDialog(
-              title: new Text("Details"),
-              //content: new Text("Hello World"),
-              content: new SingleChildScrollView(
-                child: new ListBody(
-                  children: <Widget>[
-                    new Text("Title : " + data.title),
-                    new Text("Description : " + data.description),
-                  ],
-                ),
-              ),
-              actions: <Widget>[
-                new FlatButton(
-                  child: new Text('OK'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ));
-      }
-    }
-
-    return new Container(
-        child: new Form(
-      key: _formKey,
-      child: new ListView(children: <Widget>[
-        new Stepper(
-          steps: steps,
-          type: StepperType.vertical,
-          currentStep: this.currStep,
-          onStepContinue: () {
-            setState(() {
-              if (currStep < steps.length - 1) {
-                currStep = currStep + 1;
-              } else {
-                currStep = 0;
-              }
-              // else {
-              // Scaffold
-              //     .of(context)
-              //     .showSnackBar(new SnackBar(content: new Text('$currStep')));
-
-              // if (currStep == 1) {
-              //   print('First Step');
-              //   print('object' + FocusScope.of(context).toStringDeep());
-              // }
-
-              // }
-            });
-          },
-          onStepCancel: () {
-            setState(() {
-              if (currStep > 0) {
-                currStep = currStep - 1;
-              } else {
-                currStep = 0;
-              }
-            });
-          },
-          onStepTapped: (step) {
-            setState(() {
-              currStep = step;
-            });
-          },
+          border: OutlineInputBorder(),
+          labelText: 'How To Title',
+          hintText: 'Enter How To title, min length of 3',
         ),
-        new RaisedButton(
-          child: new Text(
-            'Save details',
-            style: new TextStyle(color: Colors.white),
+      ),
+    );
+  }
+
+  Padding _showHowToDescriptionInput() {
+    return Padding(
+      padding: EdgeInsets.only(top: 20.0),
+      child: TextFormField(
+        keyboardType: TextInputType.multiline,
+        onSaved: (val) => _description = val,
+        validator: (val) => val.length < 3 ? 'Requires 3 characters' : null,
+        decoration: InputDecoration(
+          prefixIcon: Icon(
+            Icons.face,
+            color: Colors.grey,
           ),
-          onPressed: _submitDetails,
-          color: Colors.blue,
+          border: OutlineInputBorder(),
+          labelText: 'How To Description',
+          hintText: 'Enter description, min length of 3',
         ),
-      ]),
-    ));
+      ),
+    );
   }
 }

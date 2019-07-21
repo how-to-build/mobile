@@ -55,7 +55,8 @@ class HowtoPageState extends State<HowtoPage> {
                 children: <Widget>[
                   IconButton(
                     icon: Icon(Icons.exit_to_app),
-                    onPressed: () => Navigator.pushReplacementNamed(context, '/login'),
+                    onPressed: () =>
+                        Navigator.pushReplacementNamed(context, '/login'),
                   ),
                 ],
               ),
@@ -119,8 +120,7 @@ class HowtoPageState extends State<HowtoPage> {
                   leading: Icon(Icons.add_circle_outline),
                   title: Text('Create How-To'),
                   onTap: () {
-                    // Update the state of the app.
-                    // ...
+                    Navigator.pushReplacementNamed(context, '/create');
                   },
                 ),
                 ListTile(
