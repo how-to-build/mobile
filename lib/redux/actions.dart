@@ -14,12 +14,27 @@ ThunkAction<AppState> getTokenAction = (Store<AppState> store) async {
   store.dispatch(GetTokenAction(token));
 };
 
+ThunkAction<AppState> getUsernameAction = (Store<AppState> store) async {
+  final prefs = await SharedPreferences.getInstance();
+  final String storedUsername = prefs.getString('username');
+  final username = storedUsername != null ? json.decode(storedUsername) : null;
+  store.dispatch(GetUsernameAction(username));
+};
+
 class GetTokenAction {
   final dynamic _token;
 
   dynamic get token => this._token;
 
   GetTokenAction(this._token);
+}
+
+class GetUsernameAction {
+  final String _username;
+
+  String get username => this._username;
+
+  GetUsernameAction(this._username);
 }
 
 // how to actions

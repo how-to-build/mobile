@@ -118,8 +118,10 @@ class _LoginPageState extends State<LoginPage> {
   void _storeUserData(responseData) async {
     final prefs = await SharedPreferences.getInstance();
     String token = responseData['token'];
+    String username = responseData['username'];
     // json.encode(token);
     prefs.setString('token', json.encode(token));
+    prefs.setString('username', json.encode(username));
   }
 
   void _redirectUser() {

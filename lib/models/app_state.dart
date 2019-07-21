@@ -4,11 +4,12 @@ import 'package:meta/meta.dart';
 class AppState {
   final dynamic token;
   final List<dynamic> howtos;
+  final String username;
 
-  AppState({@required this.token, @required this.howtos});
+  AppState({@required this.token, @required this.howtos, @required this.username});
 
 //below will set the default value
   factory AppState.initial() {
-    return AppState(token: null, howtos: []);
+    return AppState(token: null, howtos: [], username: null);
   }
 }
