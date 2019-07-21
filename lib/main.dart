@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
           '/how-to': (BuildContext context) => HowtoPage(onInit: () {
                 StoreProvider.of<AppState>(context).dispatch(getTokenAction);
                 StoreProvider.of<AppState>(context).dispatch(getHowtosAction);
+                StoreProvider.of<AppState>(context).dispatch(getUsernameAction);
               }),
           '/login': (BuildContext context) => LoginPage(),
           '/register': (BuildContext context) => RegisterPage(),

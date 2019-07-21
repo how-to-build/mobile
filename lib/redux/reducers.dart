@@ -4,7 +4,9 @@ import 'package:mobile/redux/actions.dart';
 AppState appReducer(state, action) {
   return AppState(
       token: tokenReducer(state.token, action),
-      howtos: howtosReducer(state.howtos, action));
+      howtos: howtosReducer(state.howtos, action),
+      username: usernameReducer(state.username, action),
+      );
 }
 
 tokenReducer(token, action) {
@@ -21,4 +23,12 @@ howtosReducer(howtos, action) {
   }
 
   return howtos;
+}
+
+usernameReducer(username, action) {
+  if (action is GetUsernameAction) {
+    return action.username;
+  }
+
+  return username;
 }
