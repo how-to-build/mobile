@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'How-To',
         routes: {
-          '/create': (BuildContext context) => CreateHowToPage(),
+          '/create': (_) => CreateHowToPage(),
           '/how-to': (BuildContext context) => HowtoPage(onInit: () {
                 StoreProvider.of<AppState>(context).dispatch(getTokenAction);
                 StoreProvider.of<AppState>(context).dispatch(getHowtosAction);

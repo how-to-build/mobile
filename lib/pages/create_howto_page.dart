@@ -6,13 +6,13 @@ import 'package:http/http.dart' as http;
 import 'package:mobile/models/app_state.dart';
 
 class CreateHowToPage extends StatefulWidget {
+  @override
   _CreateHowToPageState createState() => _CreateHowToPageState();
 }
 
 class _CreateHowToPageState extends State<CreateHowToPage> {
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-
   bool _isSubmitting;
 
   String _title, _description;
@@ -49,36 +49,40 @@ class _CreateHowToPageState extends State<CreateHowToPage> {
         });
   }
 
-  Padding _showFormActions(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: 20.0),
-      child: Column(
-        children: <Widget>[
-          _isSubmitting == true
-              ? CircularProgressIndicator(
-                  valueColor:
-                      AlwaysStoppedAnimation(Theme.of(context).primaryColor),
-                )
-              : RaisedButton(
-                  onPressed: _submit,
-                  child: Text(
-                    'Add How To',
-                    style: Theme.of(context).textTheme.body1.copyWith(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
+  StoreConnector _showFormActions(BuildContext context) {
+    return StoreConnector<AppState, AppState>(
+        converter: (store) => store.state,
+        builder: (context, state) {
+          return Padding(
+            padding: EdgeInsets.only(top: 20.0),
+            child: Column(
+              children: <Widget>[
+                _isSubmitting == true
+                    ? CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation(
+                            Theme.of(context).primaryColor),
+                      )
+                    : RaisedButton(
+                        onPressed: _submit,
+                        child: Text(
+                          'Add How To',
+                          style: Theme.of(context).textTheme.body1.copyWith(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
                         ),
-                  ),
-                  elevation: 8.0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10.0),
-                    ),
-                  ),
-                  color: Theme.of(context).accentColor,
-                ),
-        ],
-      ),
-    );
+                        elevation: 8.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10.0),
+                          ),
+                        ),
+                        color: Theme.of(context).accentColor,
+                      ),
+              ],
+            ),
+          );
+        });
   }
 
   void _submit() {
@@ -92,15 +96,15 @@ class _CreateHowToPageState extends State<CreateHowToPage> {
   }
 
   void _createHowTo() async {
-    print('******************');
     setState(() => _isSubmitting = true);
-
+    String token =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWJqZWN0Ijo2NywidXNlcm5hbWUiOiJpbmVybG9mZ3JlbjQyIiwiaWF0IjoxNTYzNzU1NzYzLCJleHAiOjE1NjM3OTE3NjN9.4i1xQVk-5u3GhRlTQbYbyQV0kVUfbpSiCuIpRTcykkQ";
+    print('this is the token ===> ');
     http.Response response = await http.post(
         'https://frozen-hamlet-77739.herokuapp.com/api/howTos',
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
-          'token':
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWJqZWN0Ijo2NiwidXNlcm5hbWUiOiJqaW1ib2IiLCJpYXQiOjE1NjM3NDQwNDIsImV4cCI6MTU2Mzc4MDA0Mn0._RmxftCjfpSFM4cbdnd1qzJOcKVTm7x703OZ7o32NvE"
+          'token': token
         },
         body: json.encode(
             {"title": _title, "description": _description, "user_id": 67}));
